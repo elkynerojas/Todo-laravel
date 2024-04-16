@@ -85,7 +85,6 @@ class TaskController extends Controller
         $task->save();
         return response()->json([
             'message' => 'Tarea actualizada correctamente',
-            'task' => $task
         ]);
     }
 
@@ -94,6 +93,10 @@ class TaskController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $task = Task::find($id);
+        $task->delete();
+        return response()->json([
+            'message' => 'Tarea eliminada correctamente',
+        ]);
     }
 }

@@ -15,7 +15,7 @@
                     <v-btn v-if="!task.done" color="primary" variant="elevated" icon="mdi-check" size="x-small" @click="updateTask(true,task)"></v-btn>
                     <v-btn v-else color="primary" variant="elevated" icon="mdi-alpha-x" size="x-small" @click="updateTask(true,task)"></v-btn>
                     <v-btn  color="primary" variant="elevated" icon="mdi-pencil" size="x-small" @click="openEditForm(task)"></v-btn>
-                    <v-btn color="primary" variant="elevated" icon="mdi-delete" size="x-small"></v-btn>
+                    <v-btn color="primary" variant="elevated" icon="mdi-delete" size="x-small" @click="deleteTask(task)"></v-btn>
                 </v-card-actions>
             </v-card>
         </v-col>
@@ -131,15 +131,25 @@ export default {
         },
         async updateTask(changeStatus, task) {
             this.selectedTask = task
-
             this.selectedTask.done = changeStatus ? !task.done : task.done
-
             await axios.put(`/api/tasks/${task.id}`,this.selectedTask)
             .then(response => {
                 this.dialog = false
                 this.showEditForm = false
                 this.selectedTask = {}
                 this.getTasks()
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        },
+        async deleteTask(task) {
+            await axios.delete(`/api/tasks/${task.id}`)
+            .then(response => {
+                this.getTasks()
+            })
+            .catch(error => {
+                console.log(error)
             })
         }
     }
