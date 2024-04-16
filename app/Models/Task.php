@@ -15,6 +15,7 @@ class Task extends Model
         "id",
         "name",
         "description",
+        "done",
         "user_id"
     ];
 }

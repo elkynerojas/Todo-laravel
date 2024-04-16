@@ -16,8 +16,11 @@ class TaskController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $tasks = Task::where('user_id',$user->id)->get();
+        $tasks = Task::where('user_id',$user->id)
+        ->orderBy('done','ASC')
+        ->orderBy('created_at','ASC')
 
+        ->get();
         return response()->json([
             'tasks' => $tasks
         ]);
@@ -71,7 +74,19 @@ class TaskController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $task = Task::find($id);
+
+        $task->fill([
+            'name' => $request->get('name'),
+            'description' => $request->get('description'),
+            'done' => $request->get('done')
+        ]);
+
+        $task->save();
+        return response()->json([
+            'message' => 'Tarea actualizada correctamente',
+            'task' => $task
+        ]);
     }
 
     /**
