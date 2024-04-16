@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="d-flex justify-center">
-      <v-col cols="8">
+      <v-col cols="8" cols-sm="12">
         <v-row>
           <v-col cols="8">
             <h1 class="text-h5" color="primary">
@@ -13,13 +13,12 @@
               <v-btn
                 color="primary"
                 @click="openCreateForm()"
-                prepend-icon="mdi-plus"
+                size="small"
+                prepend-icon="mdi-plus-circle"
               >
                 <template v-slot:prepend>
-                  <v-icon color="success"></v-icon>
-                </template>
-
-                Nueva Tarea
+                  <v-icon color="white"></v-icon> </template
+                >Nueva
               </v-btn>
             </div>
           </v-col>
@@ -60,7 +59,7 @@
       </v-col>
     </v-row>
     <v-row class="d-flex justify-center">
-      <v-col cols="8">
+      <v-col cols="8" cols-sm="12">
         <v-card
           class="my-2"
           v-for="task in tasks"
@@ -192,12 +191,8 @@
 </template>
 <script>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { VFab } from "vuetify/labs/VFab";
-import { Head } from "@inertiajs/vue3";
-import "material-design-icons-iconfont/dist/material-design-icons.css";
-import { Link } from "@inertiajs/vue3";
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
 export default {
   data: () => ({
     tasks: [],
@@ -209,10 +204,8 @@ export default {
     selectedTask: {},
   }),
   components: {
-    VFab,
-    Link,
     Dropdown,
-    DropdownLink
+    DropdownLink,
   },
   created() {
     this.getTasks();

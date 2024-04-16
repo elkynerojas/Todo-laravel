@@ -23,7 +23,7 @@ class TaskController extends Controller
         ->get();
         return response()->json([
             'tasks' => $tasks
-        ]);
+        ],200);
     }
 
     /**
@@ -39,7 +39,7 @@ class TaskController extends Controller
             ]);
             return response()->json([
                 'message' => 'Tarea agregada correctamente'
-            ]);
+            ],200);
         }catch(Exception $e){
 
         }
@@ -62,7 +62,7 @@ class TaskController extends Controller
         $task->save();
         return response()->json([
             'message' => 'Tarea actualizada correctamente',
-        ]);
+        ],200);
     }
 
     /**
@@ -74,6 +74,6 @@ class TaskController extends Controller
         $task->delete();
         return response()->json([
             'message' => 'Tarea eliminada correctamente',
-        ]);
+        ],200);
     }
 }
