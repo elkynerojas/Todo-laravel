@@ -1,27 +1,86 @@
-<script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-defineProps({ tasks: Array })
-</script>
+
 
 <template>
-    <Head title="Dashboard" />
+    <v-row class="d-flex justify-center">
+        <v-col cols="2">
+            <v-btn @click="dialog = true">
+                Nueva
+            </v-btn>
+        </v-col>
+    </v-row>
+    <v-row class="d-flex justify-center">
+        <v-col cols="8" >
+            <v-card class="my-2" v-for="task in tasks" :key="task.id" :title="task.name" :text="task.description" variant="outlined">
+                <v-card-actions>
 
-    <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Listado de Tareas</h2>
+                    <v-btn outlined v-if="!task.done">Hecho</v-btn>
+                    <v-btn v-else="!task.done">Aún no termino</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-col>
+    </v-row>
+    <v-dialog
+      v-model="dialog"
+      width="1200"
+    >
+      <v-card
+        prepend-icon="mdi-update"
+        title="Nueva Tarea"
+      >
+        <v-textarea v-model="newTask.description">
+
+        </v-textarea>
+        <template v-slot:actions>
+          <v-btn
+            class="ms-auto"
+            text="Agregar"
+            @click="addNewTask()"
+          ></v-btn>
         </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <ul>
-                        <li v-for="task in tasks">
-                            {{ task.name }}
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </AuthenticatedLayout>
+      </v-card>
+    </v-dialog>
 </template>
+<script>
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { VFab } from 'vuetify/labs/VFab'
+import { Head } from '@inertiajs/vue3';
+
+
+export default {
+
+    data: () => ({
+      tasks: [],
+      dialog:false,
+      newTask: {}
+    }),
+    components: {
+        VFab
+    },
+    created() {
+        this.getTasks()
+    },
+    methods: {
+        async getTasks() {
+            await axios.get('/api/tasks')
+            .then(response => {
+                this.tasks = response.data.tasks
+            })
+            .catch(errors => {
+                console.log(errors)
+            })
+        },
+        async addNewTask() {
+            this.newTask.name = 'Nueva Tarea'
+            await axios.post('/api/tasks',this.newTask)
+            .then(response => {
+                this.newTask = {}
+                this.getTasks()
+                this.dialog = false
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
+    }
+  }
+</script>

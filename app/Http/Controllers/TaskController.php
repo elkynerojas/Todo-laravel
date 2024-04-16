@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Task;
+use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -13,8 +15,12 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
-        return Inertia::render('Dashboard',['tasks' => $tasks]);
+        $user = Auth::user();
+        $tasks = Task::where('user_id',$user->id)->get();
+
+        return response()->json([
+            'tasks' => $tasks
+        ]);
     }
 
     /**
@@ -30,7 +36,18 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $task = Task::create([
+                'name' => $request->get('name'),
+                'description' => $request->get('description'),
+                'user_id' => Auth::user()->id
+            ]);
+            return response()->json([
+                'message' => 'Tarea agregada correctamente'
+            ]);
+        }catch(Exception $e){
+
+        }
     }
 
     /**
